@@ -12,11 +12,19 @@ jobs:
           env:
               DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
               DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        - name: Build :latest
+        - name: Build Versioned
           if: success()
-          run: docker build -t blester125/${{ github.repository }}:latest .
-        - name: Push to Docker Hub
+          run: docker build -t blester125/${{ github.repository }}:`cat VERSION` .
+        - name: Push Versioned to Docker Hub
           if: success()
           uses: actions-hub/docker@master
           with:
-              args: push blester125/${{ github.repository }}:latest .
+              args: push blester125/${{ github.repository }}:`cat VERSION`
+        - name: Tag latest
+          if: success()
+          run: docker tag blester125/${{ github.repository }}:`cat VERSION` blester125/${{ github.repository }}:latest
+        - name: Push Latest to Docker Hub
+          if: success()
+          uses: actions-hub/docker@master
+          with:
+              args: push blester125/${{ github.repository }}:latest
