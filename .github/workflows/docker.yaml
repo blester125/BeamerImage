@@ -1,6 +1,9 @@
 name: Docker
 
-on: [push]
+on:
+    push:
+        tags:
+            - '*'
 
 jobs:
     publish:
@@ -12,10 +15,20 @@ jobs:
           env:
               DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
               DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        - uses: olegtarasov/get-tag@v2
+          id: tagName
         - name: Build
           if: success()
-          run: docker build -t blester125/beamer-image:latest .
+          run: docker build -t blester125/beamer-image:${{ steps.tagName.outputs.tag }} .
         - name: Push Versioned to Docker Hub
+          if: success()
+          uses: actions-hub/docker@master
+          with:
+              args: push blester125/beamer-image:${{ steps.tagName.outputs.tag }}
+        - name: Tag latest
+          if: success()
+          run: docker tag blester125/beamer-image:${{ steps.tagName.outputs.tag }} blester125/beamer-image:latest
+        - name: Push Latest to Docker Hub
           if: success()
           uses: actions-hub/docker@master
           with:
