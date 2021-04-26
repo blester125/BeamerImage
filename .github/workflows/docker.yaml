@@ -15,7 +15,7 @@ jobs:
           env:
               DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
               DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        - uses: olegtarasov/get-tag@v2
+        - uses: olegtarasov/get-tag@v2.1
           id: tagName
         - name: Build
           if: success()
