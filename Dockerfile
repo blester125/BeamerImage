@@ -1,4 +1,4 @@
-FROM python:3.6.10-stretch
+FROM python:3.9.7-bullseye
 
 RUN ln -snf /usr/share/zoneinfo/Etc/UTC /etc/localtime \
     && echo "Etc/UTC" > /etc/timezone \
